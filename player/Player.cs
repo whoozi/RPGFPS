@@ -1,0 +1,98 @@
+using Godot;
+
+namespace RPGFPS.Player;
+
+public partial class Player : CharacterBody3D {
+	private const float MouseSens = 0.35f;
+	private const float JoystickSens = 3.5f;
+
+	private readonly float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+
+	[Export] private Camera3D _camera;
+	[Export] private float _movementSpeed = 3f;
+
+	// used for physics interpolation
+	private Vector3 _cameraOffset, _lastPhysicsPos, _curPhysicsPos;
+
+	public override void _Ready() {
+		_cameraOffset = _camera.Position;
+
+		Input.MouseMode = Input.MouseModeEnum.Captured;
+	}
+
+	public override void _PhysicsProcess(double delta) {
+		var velocity = Velocity;
+
+		if (!IsOnFloor())
+			velocity.Y -= _gravity * (float)delta;
+
+		var inputDir = Input.GetVector("strafe_left", "strafe_right", "move_backward", "move_forward");
+		var direction = (_camera.GlobalTransform.Basis * new Vector3(inputDir.X, 0, -inputDir.Y)).Normalized();
+
+		if (direction != Vector3.Zero) {
+			velocity.X = direction.X * _movementSpeed;
+			velocity.Z = direction.Z * _movementSpeed;
+		} else {
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, _movementSpeed);
+			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, _movementSpeed);
+		}
+
+		Velocity = velocity;
+		MoveAndSlide();
+
+		_lastPhysicsPos = _curPhysicsPos;
+		_curPhysicsPos = GlobalPosition;
+	}
+
+	public override void _Process(double delta) {
+		LookAroundByInput(Input.GetVector("look_left", "look_right", "look_down", "look_up") * JoystickSens *
+		                  (float)GetProcessDeltaTime());
+
+		// apply physics interpolation fraction to camera to reduce physics stutter
+		_camera.GlobalPosition = _lastPhysicsPos +
+		                         (_curPhysicsPos - _lastPhysicsPos) * (float)Engine.GetPhysicsInterpolationFraction() +
+		                         _cameraOffset;
+	}
+
+	public override void _UnhandledInput(InputEvent @event) {
+		if (Input.MouseMode != Input.MouseModeEnum.Captured) {
+			if (@event is InputEventMouseButton)
+				Input.MouseMode = Input.MouseModeEnum.Captured;
+			else return;
+		}
+
+		if (@event is InputEventMouseMotion motion) {
+			var look = motion.Relative * MouseSens * 0.01f;
+			LookAroundByInput(new Vector2(look.X, -look.Y));
+		}
+
+		if (@event.IsActionReleased("ui_cancel"))
+			Input.MouseMode = Input.MouseModeEnum.Visible;
+
+		// ReSharper disable once InvertIf
+		if (@event is InputEventKey key && key.IsReleased())
+			// ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
+			switch (key.PhysicalKeycode) {
+				case Key.F11:
+					DisplayServer.WindowSetMode(
+						DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Windowed
+							? DisplayServer.WindowMode.Fullscreen
+							: DisplayServer.WindowMode.Windowed);
+					break;
+			}
+	}
+
+	public override void _Notification(int what) {
+		Input.MouseMode = (long)what switch {
+			MainLoop.NotificationApplicationFocusOut => Input.MouseModeEnum.Visible,
+			MainLoop.NotificationApplicationFocusIn => Input.MouseModeEnum.Captured,
+			_ => Input.MouseMode
+		};
+	}
+
+	private void LookAroundByInput(Vector2 lookInput) {
+		RotateY(-lookInput.X);
+		_camera.Rotation = new Vector3(
+			Mathf.Clamp(_camera.Rotation.X + lookInput.Y, Mathf.DegToRad(-30), Mathf.DegToRad(60)), 0f, 0f);
+	}
+}
