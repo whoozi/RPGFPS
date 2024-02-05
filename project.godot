@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [display]
 
+window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
@@ -70,3 +71,7 @@ look_down={
 "events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":0,"axis":3,"axis_value":1.0,"script":null)
 ]
 }
+
+[physics]
+
+3d/default_gravity=19.6

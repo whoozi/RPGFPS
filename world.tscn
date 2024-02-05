@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://b7t5ikxw5ss4v"]
+[gd_scene load_steps=7 format=3 uid="uid://b7t5ikxw5ss4v"]
 
 [ext_resource type="PackedScene" uid="uid://wau1v6llhvjr" path="res://player/player.tscn" id="1_b24gq"]
+[ext_resource type="Texture2D" uid="uid://ch2xk3dj0243j" path="res://env/grass.png" id="2_1eksi"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3s6vy"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -15,6 +16,11 @@ sky = SubResource("Sky_arf61")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rnmik"]
+albedo_texture = ExtResource("2_1eksi")
+uv1_scale = Vector3(0.3, 0.3, 0.3)
+uv1_triplanar = true
+
 [node name="World" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -27,6 +33,7 @@ environment = SubResource("Environment_0pfe0")
 [node name="Player" parent="." instance=ExtResource("1_b24gq")]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00562382, -0.25, 0.0140247)
+material_override = SubResource("StandardMaterial3D_rnmik")
 use_collision = true
-size = Vector3(5, 0.5, 5)
+size = Vector3(50, 0, 50)

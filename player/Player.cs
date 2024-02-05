@@ -10,6 +10,7 @@ public partial class Player : CharacterBody3D {
 
 	[Export] private Camera3D _camera;
 	[Export] private float _movementSpeed = 3f;
+	// [Export] private float _jumpHeight = 1f;
 
 	// used for physics interpolation
 	private Vector3 _cameraOffset, _lastPhysicsPos, _curPhysicsPos;
@@ -25,6 +26,9 @@ public partial class Player : CharacterBody3D {
 
 		if (!IsOnFloor())
 			velocity.Y -= _gravity * (float)delta;
+
+		// if (Input.IsActionJustPressed("jump") && IsOnFloor())
+		// velocity.Y = Mathf.Sqrt(2f * _gravity * _jumpHeight);
 
 		var inputDir = Input.GetVector("strafe_left", "strafe_right", "move_backward", "move_forward");
 		var direction = (_camera.GlobalTransform.Basis * new Vector3(inputDir.X, 0, -inputDir.Y)).Normalized();
@@ -45,8 +49,7 @@ public partial class Player : CharacterBody3D {
 	}
 
 	public override void _Process(double delta) {
-		LookAroundByInput(Input.GetVector("look_left", "look_right", "look_down", "look_up") * JoystickSens *
-		                  (float)GetProcessDeltaTime());
+		LookAroundByInput(Input.GetVector("look_left", "look_right", "look_down", "look_up") * JoystickSens * (float)delta);
 
 		// apply physics interpolation fraction to camera to reduce physics stutter
 		_camera.GlobalPosition = _lastPhysicsPos +
@@ -55,31 +58,12 @@ public partial class Player : CharacterBody3D {
 	}
 
 	public override void _UnhandledInput(InputEvent @event) {
-		if (Input.MouseMode != Input.MouseModeEnum.Captured) {
-			if (@event is InputEventMouseButton)
-				Input.MouseMode = Input.MouseModeEnum.Captured;
-			else return;
-		}
+		if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
-		if (@event is InputEventMouseMotion motion) {
-			var look = motion.Relative * MouseSens * 0.01f;
-			LookAroundByInput(new Vector2(look.X, -look.Y));
-		}
+		if (@event is not InputEventMouseMotion motion) return;
 
-		if (@event.IsActionReleased("ui_cancel"))
-			Input.MouseMode = Input.MouseModeEnum.Visible;
-
-		// ReSharper disable once InvertIf
-		if (@event is InputEventKey key && key.IsReleased())
-			// ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
-			switch (key.PhysicalKeycode) {
-				case Key.F11:
-					DisplayServer.WindowSetMode(
-						DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Windowed
-							? DisplayServer.WindowMode.Fullscreen
-							: DisplayServer.WindowMode.Windowed);
-					break;
-			}
+		var look = motion.Relative * MouseSens * 0.01f;
+		LookAroundByInput(new Vector2(look.X, -look.Y));
 	}
 
 	public override void _Notification(int what) {
