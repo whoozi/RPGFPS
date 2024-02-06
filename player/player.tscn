@@ -1,19 +1,38 @@
-[gd_scene load_steps=3 format=3 uid="uid://wau1v6llhvjr"]
+[gd_scene load_steps=5 format=3 uid="uid://wau1v6llhvjr"]
 
 [ext_resource type="Script" path="res://player/Player.cs" id="1_46tre"]
+[ext_resource type="Texture2D" uid="uid://c40aiecktwi87" path="res://player/knight_idle.png" id="2_f5wu8"]
+[ext_resource type="AnimationLibrary" uid="uid://syt6w4xkjkge" path="res://player/player_anims.tres" id="3_aqa2w"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_7wmys"]
 height = 1.8
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_camera")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_camera", "AnimPlayer", "Sprite")]
 script = ExtResource("1_46tre")
 _camera = NodePath("Camera3D")
+AnimPlayer = NodePath("AnimationPlayer")
+Sprite = NodePath("Sprite3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CylinderShape3D_7wmys")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 doppler_tracking = 2
 current = true
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+cast_shadow = 3
+offset = Vector2(0, 92)
+billboard = 2
+alpha_cut = 2
+texture = ExtResource("2_f5wu8")
+hframes = 2
+vframes = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": ExtResource("3_aqa2w")
+}
+autoplay = "move"

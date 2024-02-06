@@ -2,17 +2,12 @@ using Godot;
 
 namespace RPGFPS.Player;
 
-public partial class Player : CharacterBody3D {
+public partial class Player : Mob {
+	[Export] private Camera3D _camera;
+
 	private const float MouseSens = 0.35f;
 	private const float JoystickSens = 3.5f;
 
-	private readonly float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-
-	[Export] private Camera3D _camera;
-	[Export] private float _movementSpeed = 3f;
-	// [Export] private float _jumpHeight = 1f;
-
-	// used for physics interpolation
 	private Vector3 _cameraOffset, _lastPhysicsPos, _curPhysicsPos;
 
 	public override void _Ready() {
@@ -25,20 +20,19 @@ public partial class Player : CharacterBody3D {
 		var velocity = Velocity;
 
 		if (!IsOnFloor())
-			velocity.Y -= _gravity * (float)delta;
+			velocity.Y -= Gravity * (float)delta;
 
-		// if (Input.IsActionJustPressed("jump") && IsOnFloor())
 		// velocity.Y = Mathf.Sqrt(2f * _gravity * _jumpHeight);
 
 		var inputDir = Input.GetVector("strafe_left", "strafe_right", "move_backward", "move_forward");
-		var direction = (_camera.GlobalTransform.Basis * new Vector3(inputDir.X, 0, -inputDir.Y)).Normalized();
+		var direction = (_camera.GlobalBasis * new Vector3(inputDir.X, 0, -inputDir.Y)).Normalized();
 
 		if (direction != Vector3.Zero) {
-			velocity.X = direction.X * _movementSpeed;
-			velocity.Z = direction.Z * _movementSpeed;
+			velocity.X = direction.X * MovementSpeed;
+			velocity.Z = direction.Z * MovementSpeed;
 		} else {
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, _movementSpeed);
-			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, _movementSpeed);
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, MovementSpeed);
+			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, MovementSpeed);
 		}
 
 		Velocity = velocity;

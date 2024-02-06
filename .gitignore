@@ -1,7 +1,6 @@
 # Godot 4+ specific ignores
 .godot/
 .build/
-addons/
 
 # IDE ignores
 .idea/

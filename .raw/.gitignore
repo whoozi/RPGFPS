@@ -1,0 +1,4 @@
+# Files that are to be imported into Godot (temp files)
+.import/
+
+*.blend1
