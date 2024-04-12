@@ -4,9 +4,8 @@ namespace RPGFPS.Player;
 
 public partial class Player : Mob
 {
-    [Export] private Camera3D _camera;
-
     private const float MouseSens = 0.35f, JoystickSens = 3.5f;
+    [Export] private Camera3D _camera;
 
     private Vector3 _cameraOffset, _lastPhysicsPos, _curPhysicsPos;
 
@@ -22,20 +21,20 @@ public partial class Player : Mob
         var velocity = Velocity;
 
         if (!IsOnFloor())
-            velocity.Y -= _gravity * (float)delta;
+            velocity.Y -= Gravity * (float)delta;
 
         var inputDir = Input.GetVector("strafe_left", "strafe_right", "move_backward", "move_forward");
         var direction = (_camera.GlobalBasis * new Vector3(inputDir.X, 0, -inputDir.Y)).Normalized();
 
         if (direction != Vector3.Zero)
         {
-            velocity.X = direction.X * _movementSpeed;
-            velocity.Z = direction.Z * _movementSpeed;
+            velocity.X = direction.X * MovementSpeed;
+            velocity.Z = direction.Z * MovementSpeed;
         }
         else
         {
-            velocity.X = Mathf.MoveToward(Velocity.X, 0, _movementSpeed);
-            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, _movementSpeed);
+            velocity.X = Mathf.MoveToward(Velocity.X, 0, MovementSpeed);
+            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, MovementSpeed);
         }
 
         Velocity = velocity;
@@ -47,10 +46,13 @@ public partial class Player : Mob
 
     public override void _Process(double delta)
     {
-        LookAroundByInput(Input.GetVector("look_left", "look_right", "look_down", "look_up") * JoystickSens * (float)delta);
+        LookAroundByInput(Input.GetVector("look_left", "look_right", "look_down", "look_up") * JoystickSens *
+                          (float)delta);
 
         // apply physics interpolation fraction to camera to reduce physics stutter
-        _camera.GlobalPosition = _lastPhysicsPos + (_curPhysicsPos - _lastPhysicsPos) * (float)Engine.GetPhysicsInterpolationFraction() + _cameraOffset;
+        _camera.GlobalPosition = _lastPhysicsPos +
+                                 (_curPhysicsPos - _lastPhysicsPos) * (float)Engine.GetPhysicsInterpolationFraction() +
+                                 _cameraOffset;
     }
 
     public override void _UnhandledInput(InputEvent @event)

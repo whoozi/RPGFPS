@@ -34,16 +34,14 @@ public partial class DirectionalSprite3D : Sprite3D
                 row = 4; // back
                 break;
             default:
-                {
-                    FlipH = left > 0;
-                    if (Mathf.Abs(forward) < 0.3f)
-                        row = 2; // left
-                    else if (forward < 0)
-                        row = 1; // front left
-                    else
-                        row = 3; // back left
-                    break;
-                }
+                FlipH = left > 0;
+                if (Mathf.Abs(forward) < 0.3f)
+                    row = 2; // left
+                else if (forward < 0)
+                    row = 1; // front left
+                else
+                    row = 3; // back left
+                break;
         }
 
         return row;
