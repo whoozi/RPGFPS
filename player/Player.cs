@@ -7,8 +7,13 @@ public partial class Player : Mob
     private const float MouseSens = 0.35f, JoystickSens = 3.5f;
     [Export] private Camera3D _camera;
 
+    private Vector3 _cameraOffset;
+
     public override void _Ready()
     {
+        _cameraOffset = _camera.Position;
+        _camera.SetAsTopLevel(true);
+
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
@@ -39,8 +44,10 @@ public partial class Player : Mob
 
     public override void _Process(double delta)
     {
-        LookAroundByInput(Input.GetVector("look_left", "look_right", "look_down", "look_up") * JoystickSens *
-                          (float)delta);
+        LookAroundByInput(Input.GetVector("look_left", "look_right", "look_down", "look_up")
+                          * JoystickSens * (float)delta);
+
+        _camera.GlobalPosition = GetGlobalTransformInterpolated().Origin + _cameraOffset;
     }
 
     public override void _UnhandledInput(InputEvent @event)
