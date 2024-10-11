@@ -8,10 +8,8 @@
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_7wmys"]
 height = 1.8
 
-[node name="Mob" type="CharacterBody3D" node_paths=PackedStringArray("AnimPlayer", "Sprite")]
+[node name="Mob" type="CharacterBody3D"]
 script = ExtResource("1_f7mer")
-AnimPlayer = NodePath("AnimationPlayer")
-Sprite = NodePath("Sprite3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -28,6 +26,6 @@ script = ExtResource("3_jfa8p")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": ExtResource("3_e7u0u")
+&"": ExtResource("3_e7u0u")
 }
 autoplay = "move"

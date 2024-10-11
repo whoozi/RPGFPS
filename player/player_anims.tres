@@ -3,8 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://c40aiecktwi87" path="res://player/knight_idle.png" id="1_2y4fr"]
 [ext_resource type="Texture2D" uid="uid://bsn4cnsc41kvw" path="res://player/knight_move.png" id="2_gfmmi"]
 
-[sub_resource type="Animation" id="Animation_3v2ic"]
-length = 0.001
+[sub_resource type="Animation" id="Animation_xjtys"]
+resource_name = "move"
+length = 0.8
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -15,7 +17,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("1_2y4fr")]
+"values": [ExtResource("2_gfmmi")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -27,7 +29,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [2]
+"values": [4]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -36,10 +38,10 @@ tracks/2/path = NodePath("Sprite3D:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [0]
+"values": [0, 1, 2, 3]
 }
 
 [sub_resource type="Animation" id="Animation_vf7ej"]
@@ -82,10 +84,8 @@ tracks/2/keys = {
 "values": [0, 1]
 }
 
-[sub_resource type="Animation" id="Animation_xjtys"]
-resource_name = "move"
-length = 0.8
-loop_mode = 1
+[sub_resource type="Animation" id="Animation_3v2ic"]
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -96,7 +96,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_gfmmi")]
+"values": [ExtResource("1_2y4fr")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -108,7 +108,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [4]
+"values": [2]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -117,15 +117,15 @@ tracks/2/path = NodePath("Sprite3D:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [0, 1, 2, 3]
+"values": [0]
 }
 
 [resource]
 _data = {
-"RESET": SubResource("Animation_3v2ic"),
-"idle": SubResource("Animation_vf7ej"),
-"move": SubResource("Animation_xjtys")
+&"RESET": SubResource("Animation_3v2ic"),
+&"idle": SubResource("Animation_vf7ej"),
+&"move": SubResource("Animation_xjtys")
 }
