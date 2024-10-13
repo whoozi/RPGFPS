@@ -12,7 +12,6 @@ public partial class Player : Mob
     public override void _Ready()
     {
         _cameraOffset = _camera.Position;
-        _camera.SetAsTopLevel(true);
 
         Input.MouseMode = Input.MouseModeEnum.Captured;
     }
