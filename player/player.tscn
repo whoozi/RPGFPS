@@ -22,6 +22,7 @@ doppler_tracking = 2
 current = true
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
+physics_interpolation_mode = 2
 cast_shadow = 3
 offset = Vector2(0, 92)
 billboard = 2
